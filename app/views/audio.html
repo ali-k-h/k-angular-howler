@@ -1,0 +1,27 @@
+<div class="audio-player">
+                    <span class="fa-stack fa-lg audio-icon">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa {{audioCtrl.playIcon}} fa-stack-1x" ng-click="audioCtrl.play()"></i>
+                    </span>
+                    <span class="fa-stack fa-lg audio-icon">
+                        <i class="fa fa-circle fa-stack-2x"></i>
+                        <i class="fa fa-stop fa-stack-1x" ng-click="audioCtrl.stop()"></i>
+                    </span>
+  <span class="meter">{{ audioCtrl.data.startOffset | secondsToDateTime | date:'mm:ss'}}</span>
+  <div class="progressbar">
+    <canvas id="visualizerCanvas"> </canvas>
+    <input id="progressBar" type="range" ng-change="audioCtrl.timeChange()" ng-model="audioCtrl.data.timevalue" />
+
+  </div>
+
+  <div class="volume" ng-click="audioCtrl.volumeHoverIn(this)" stop-event='click'>
+    <div class="volumeIcon">
+      <span></span>
+      <span></span>
+      <span>))</span>
+    </div>
+    <div class="volumeLevel" ng-show="audioCtrl.data.showVolumeLevel">
+      <input id="volume" type="range" class="level" ng-change="audioCtrl.volumeChange()" ng-model="audioCtrl.data.levelvalue" />
+    </div>
+  </div>
+</div>
