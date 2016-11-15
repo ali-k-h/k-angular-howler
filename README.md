@@ -4,8 +4,10 @@
 npm install
 Run `grunt build` for building
 
-# Example: see example folder on how to use it and add dependencies
-TODO:
+## Example: 
+see example folder on how to use it and add dependencies
+
+##TODO:
 - Bower install
 - Replace font-awesome with a light library
 - Cleanup gruntfile.js, package.json, mode_module folder
