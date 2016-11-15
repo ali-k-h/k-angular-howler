@@ -1,8 +1,7 @@
 # k-angular-howler
 
 ## Build & development
-`npm install`
-Run `grunt build` for building
+Run `npm install`, `grunt build` for building
 
 ## Example: 
 see example folder on how to use it and add dependencies
