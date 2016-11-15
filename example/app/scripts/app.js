@@ -1,9 +1,5 @@
 'use strict';
-/*!
- *  K-Angular-howler 0.1 by:@kosarh79
- *  License - MIT License
-/*
- * -------------------------- */
+
 /**
  * @ngdoc overview
  * @name kAngularHowlerApp
@@ -13,4 +9,4 @@
  * Main module of the application.
  */
 angular
-  .module('kAngularHowlerApp', []);
+  .module('kAngularHowlerAppExample', ['kAngularHowlerApp']);

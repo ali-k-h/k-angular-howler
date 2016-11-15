@@ -279,7 +279,8 @@ module.exports = function (grunt) {
     less: {
       server: {
         files: {
-          '.tmp/styles/main.css' : '<%= yeoman.app %>/styles/main.less',
+          '<%= yeoman.app %>/styles/main.css' : '<%= yeoman.app %>/styles/main.less',
+          '<%= yeoman.app %>/styles/bootstrap.css' : '<%= yeoman.app %>/styles/bootstrap.less',
         }
       }
     },
@@ -290,33 +291,25 @@ module.exports = function (grunt) {
      cssmin: {
        dist: {
          files: {
-           '<%= yeoman.dist %>/styles/kangularhowler.min.css': [
-             '.tmp/styles/main.css'
+           '<%= yeoman.dist %>/styles/main.css': [
+             '.tmp/styles/main.less'
            ]
          }
        }
      },
-    concat: {
-      options: {
-        separator: ';'
-      },
-      dist: {
-        files:{
-          '.tmp/concat/app.js':
-            ['<%= yeoman.app %>/scripts/*.js',
-              '.tmp/templateCache.js']
-        }
-      }
-    },
-    uglify: {
-      dist: {
-        files: {
-          '<%= yeoman.dist %>/js/kangularhowler.min.js': [
-            '.tmp/concat/app.js'
-          ]
-        }
-      }
-    },
+     uglify: {
+       dist: {
+         files: {
+           '<%= yeoman.dist %>/scripts/scripts.js': [
+             '<%= yeoman.dist %>/scripts/scripts.js'
+           ]
+         }
+       }
+     },
+     concat: {
+       dist: {}
+     },
+
     imagemin: {
       dist: {
         files: [{
@@ -359,7 +352,7 @@ module.exports = function (grunt) {
     ngtemplates: {
       dist: {
         options: {
-          module: 'kAngularHowlerApp',
+          module: 'kAngularHowlerAppExample',
           htmlmin: '<%= htmlmin.dist.options %>',
           usemin: 'scripts/scripts.js'
         },
@@ -476,21 +469,21 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
-    //'wiredep',
-    //'useminPrepare',
-    //'concurrent:dist',
+    'wiredep',
+    'useminPrepare',
+    'concurrent:dist',
     'less',
     'postcss',
     'ngtemplates',
     'concat',
     'ngAnnotate',
-   // 'copy:dist',
-  //  'cdnify',
+    'copy:dist',
+    'cdnify',
     'cssmin',
     'uglify',
-   // 'filerev',
- //   'usemin',
-  //  'htmlmin'
+    'filerev',
+    'usemin',
+    'htmlmin'
   ]);
 
   grunt.registerTask('default', [

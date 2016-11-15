@@ -1,27 +1,50 @@
-<div class="audio-player">
-                    <span class="fa-stack fa-lg audio-icon">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa {{audioCtrl.playIcon}} fa-stack-1x" ng-click="audioCtrl.play()"></i>
-                    </span>
-                    <span class="fa-stack fa-lg audio-icon">
-                        <i class="fa fa-circle fa-stack-2x"></i>
-                        <i class="fa fa-stop fa-stack-1x" ng-click="audioCtrl.stop()"></i>
-                    </span>
-  <span class="meter">{{ audioCtrl.data.startOffset | secondsToDateTime | date:'mm:ss'}}</span>
-  <div class="progressbar">
-    <canvas id="visualizerCanvas"> </canvas>
-    <input id="progressBar" type="range" ng-change="audioCtrl.timeChange()" ng-model="audioCtrl.data.timevalue" />
+<div class="sonic-audio-player-wrapper">
 
-  </div>
+  <div class="sonic-audio-player-base"></div>
+  <!--<div class="sonic-audio-player-cover">-->
+  <div class="sonic-audio-player">
+    <div class="sap-section">
+      <i class="sap-icon fa fa-step-backward" ng-click="audioCtrl.move('backward')"></i>
+      <i class="sap-icon {{audioCtrl.playIcon}}" ng-click="audioCtrl.play()"></i>
+      <i class="sap-icon fa fa-step-forward" ng-click="audioCtrl.move()"></i>
+      <!--<i class="sap-icon fa fa-stop" ng-click="audioCtrl.stop()"></i>-->
+      <span class="sap-icon spn-icon-volume {{audioCtrl.volumeIcon}}"
+            ng-click="audioCtrl.showVolume(this)"
+            ng-mouseleave="audioCtrl.showVolumeLevel = false"
+            asc-click-anywhere-but-here = "audioCtrl.hideVolume()"
+            stop-event='click'>
+        <!--<span class="volume-level" ng-if="audioCtrl.showVolumeLevel">-->
+          <input class="volume-level" type="range" class="level"
+                 ng-if="audioCtrl.showVolumeLevel"
+                 ng-click="audioCtrl.thisIsVolumeRange = true;"
+                 ng-change="audioCtrl.volumeChange()"
 
-  <div class="volume" ng-click="audioCtrl.volumeHoverIn(this)" stop-event='click'>
-    <div class="volumeIcon">
-      <span></span>
-      <span></span>
-      <span>))</span>
-    </div>
-    <div class="volumeLevel" ng-show="audioCtrl.data.showVolumeLevel">
-      <input id="volume" type="range" class="level" ng-change="audioCtrl.volumeChange()" ng-model="audioCtrl.data.levelvalue" />
-    </div>
+                 ng-model="audioCtrl.volumeLevel" />
+      </span>
+      <!--</span>-->
+      <span class="sap-spinner-icon-cover" ng-show="audioCtrl.showSpinner">
+        <span class="fa fa-cog fa-spin sap-spinner-icon"></span>
+      </span>
+    <span class="sap-info" ng-show="audioCtrl.showSoundInfo">
+      <img class="sap-info-image" src="{{audioCtrl.accountImage}}" />
+      <span class="sap-name">
+        <span class="sap-info-user-name" ng-bind="audioCtrl.username"></span>
+        <span class="sap-info-file-name">
+          {{audioCtrl.filename}}
+          <span class="progressbar">
+            <span ng-show="audioCtrl.startOffset"
+                  class="sonic-audio-player-meter sonic-audio-player-meter-left">
+              {{ audioCtrl.startOffset | secondsToDateTime | date:'mm:ss'}}</span>
+              <input class="progressbar-input" id="progressBar" type="range"
+                     ng-change="audioCtrl.timeChange()"
+                     ng-model="audioCtrl.playbackPosition" />
+            <span class="sonic-audio-player-meter sonic-audio-player-meter-right">
+              {{ audioCtrl.duration | secondsToDateTime | date:'mm:ss'}}</span>
+          </span>
+        </span>
+      </span>
+    </span>
+    </div><!--audio-player-first-section-->
   </div>
-</div>
+  <!--</div><!-sonic-audio-player-cover&ndash;&gt;-->
+</div><!--sonic-audio-player-wrapper-->

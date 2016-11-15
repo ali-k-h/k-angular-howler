@@ -1,176 +1,275 @@
-@import (less) 'fontello/css/animation.css';
 
+@font-family:lucida grande, lucida sans unicode, lucida sans, Helvetica, Arial, sans-serif;
+@screen-xs-min:33.9em;
+@screen-sm-min:47.9em;
+@screen-md-min:61.9em;
+@screen-lg-min:74.9em;
+@container-min-width:23em;
 @bg-color-dark:#2a2929;
 @bg-color-light:#bbbbbb;
-@color-white:#FCFCFC;
+@color-white:#ffffff;
 @color-orange:#D09619;
+@color-black:#080808;
 @color-orange-dark:#A8770C;
-
-
-.audio-icon{
-  color: @color-orange;
-  font-size: 1em;
-  float: left;
-  cursor:pointer;
+@color-brown-dark:#805414;
+@color-gold-lightest:#f0ece5;
+@color-gray2:#DBD9D9;
+@color-blue-dark:#0e445e;
+@color-blue:#4f6e7d;
+.vendor(@property, @value) {
+  -webkit-@{property}: @value;
+  -ms-@{property}: @value;
+  -o-@{property}: @value;
+  -moz-@{property}: @value;
+    @{property}: @value;
+}
+.asc-border-thin-gray(){
+  border: 0.1em solid @color-gray2;
+}
+.asc-transition{
+  /* transition: <property> <duration> <timing-function> <delay>;*/
+  @timing-function:ease-in;
+  @duration:0.25s;
+  .vendor(transition,all @timing-function @duration);
+}
+.animate-ng-if(@className){
+  .@{className}.ng-enter,
+  .@{className}.ng-leave {
+    .asc-transition();
+  }
+  .@{className}.ng-enter,
+  .@{className}.ng-leave.ng-leave-active {
+    opacity:0;
+  }
+  .@{className}.ng-leave,
+  .@{className}.ng-enter.ng-enter-active {
+    opacity:1;
+  }
+}
+.sap-spinner-icon{
+  color: @color-brown-dark;
+  position: relative;
+  font-size: 1.5em;
+  line-height: 2em;
+}
+.sap-spinner-icon-cover{
+  width: 100%;
+  position: relative;
+  display: inline-block;
+  vertical-align:middle;
+  text-align: center;
+}
+.sonic-audio-player-wrapper{
+  font-family: @font-family;
+  position: absolute;
+  width: 100%;
+  height: 3.4em;
+  .asc-transition();
 }
 
-i.fa.fa-play.fa-stack-1x {
+.progressbar {
+  position: absolute;
+  width: 95%;
+  opacity:0;
+  .asc-transition();
+  display:flex;
+  flex-direction:row;
+  align-items: center;
+  background-color: #f0ece5;
+  padding: 0.1em 0 0 0;
+  // .asc-border-thin-gray();
+  border-left: none;
+  border-top: none;
+  z-index: 2;
+  bottom: -0.25em;
+  left: 0;
+}
+
+.progressbar-input{
+
+  flex:1 1 auto;
+  background: transparent;
+
+}
+input[type=range]{
+  padding:0;
+}
+.sonic-audio-player-meter{
   font-size: 0.9em;
-  margin-top: 0.04em;
-  margin-left: 0.06em;
-  color: @color-white;
+  //padding: 0 1em;
+  color:@color-black;
+  flex:0 0 auto;
+  line-height: 2em;
 }
-i.fa.fa-pause.fa-stack-1x {
-  font-size: 0.9em;
-  margin-top: 0.07em;
-  margin-left: 0.01em;
-  color: @color-white;
+.sonic-audio-player-meter-left{
+  margin-right:0.5em;
+  color:@color-orange-dark;
 }
-i.fa.fa-stop.fa-stack-1x {
-  color: white;
-  font-size: 0.85em;
-  margin-top: 0.04em;
+.sonic-audio-player-meter-right{
+  margin-left:0.5em;
+}
+.progressbar.ng-hide{
+  opacity:0;
 }
 
-.audio-player .meter{
-  font-size: 0.8em;
-  float: left;
-  margin-top: 0.7em;
-  margin-left: 0.3em;
+.sap-info:hover .progressbar{
+  opacity:1;
 }
-.audio-player{
-  /* float: left; */
+
+.volume-level.ng-hide{
+  opacity:1;
+}
+
+.volume-level{
+  background-color: @color-gold-lightest;
+  .asc-transition();
+  position: absolute;
+  width: 9em !important;
+  padding-right: 1em !important;
+  z-index: 5;
+  margin: auto !important;
+  top: 0;
+  left: 2.5em;
+  right: 0;
+  bottom: 0;
+  height: 90%;
+}
+.animate-ng-if(volume-level);
+//IE >=10
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  //.progressbar{
+  //  top:3em !important;
+  //}
+  //.volume-level{
+  //  top:-0.3em !important;
+  //}
+  //.sonic-audio-player-wrapper{
+  ////  height:5em !important;
+  //}
+  //.sonic-audio-player{
+  //  top:1em !important;
+  //}
+}
+//Firefox ≥ 3.6
+@media screen and (min--moz-device-pixel-ratio:0) {
+  //.progressbar{
+  //  top:3.5em !important;
+  //}
+  //.volume-level{
+  //  top:-0.8em !important;
+  //}
+  //.sonic-audio-player-wrapper{
+  // // height:5em !important;
+  //}
+  //.sonic-audio-player{
+  //  top:1em !important;
+  //}
+  //.sonic-audio-player-meter{
+  // // line-height:3.5em;
+  //}
+}
+
+.sonic-audio-player-base{
+  background-color: @color-gold-lightest;
+  .asc-border-thin-gray();
+  position: absolute;
+  flex:1 1 auto;
+  width: 100%;
+  height: 100%;
+  opacity: 0.85;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+.sonic-audio-player{
+  position: absolute;
+  top:0;
+  left:0;
+  z-index:1;
+  width: 100%;
+  color: @color-brown-dark;
+  // padding: 0.5em 0;
+}
+.sap-section{
   position: relative;
   display: flex;
   width: 100%;
   flex-direction: row;
-  /* background-color: #5a5959; */
-  padding: 0.5em;
-  /* opacity: 0.8; */
-
+  overflow:hidden;
+  white-space: nowrap;
+  padding:0.2em;
 }
-.progressbar {
-  float: left;
-  width: 13em;
-  margin-left: 0.5em;
-  height: 1.4em;
-  position: relative;
+.sap-first-section{
+  // padding:0 0.5em;
 }
-.volume {
-  float: left;
-  position: relative;
-  margin-left: 0.2em;
-  cursor: pointer;
+.sap-second-section{
+  // margin-top:0.75em;
 }
-
-.volumeIcon{
-  margin-top: 2px;
-  float: left;
-  position: relative;
+.sap-info{
+  color:@color-black;
+  flex:1 1 auto;
+  position:relative;
+  display:flex;
+  flex-direction:row;
+  margin: 0 0 0 0.5em;
+  padding:0;
+  align-items:center;
 }
-.volumeLevel{
-  background-color: #5A5959;
-  position: absolute;
-  width: 6em;
-  padding: 0.58em 0.3em 0.6em 0.8em;
-  right: 0em;
-  z-index: 5;
-  opacity:0.8;
-}
-
-
-.volumeIcon span:first-child{
-  width: 0;
-  border: 0px solid @color-orange;
-  border-left-width: 3px;
-  border-bottom-width: 0;
-  position: relative;
-  opacity: 0.9;
-  border-top-left-radius: 1px;
-  border-bottom-left-radius: 1px;
-  padding: 0px;
-  font-size: 8px;
-}
-.volumeIcon span:nth-child(2){
-  width: 0;
-  height: 0;
-  border: 7px solid transparent;
-  border-right-width: 8px;
-  border-right-color: @color-orange;
-  border-left: 0;
-  position: relative;
-  opacity: 0.9;
-  font-size: 8px;
-}
-.volumeIcon span:nth-child(3){
-  opacity: 0.7;
-}
-
-.btnPlayAudio{
-  width:1em;
-}
-
-input#progressBar{
-  bottom: 0 !important;
-  z-index: 1;
-  float: left;
-  position: absolute;
-  opacity: 0.8;
-}
-.triangle{
-  height: 0px;
-  width: 0px;
-  border-left: 100px solid transparent;
-  border-right: 100px solid transparent;
-  border-bottom: 200px solid #428bca;
-}
-
-.play{
-  width: 0;
-  height: 0;
-  border: 0.5em solid transparent;
-  border-left-width: 0.7em;
-  border-left-color: #F5F5F5;
-  border-right: 0;
-  margin-right: 0.1em;
-  position: relative;
-  margin: 0.535em 0.77em;
-}
-.pause{
-  width: 0.9em;
-  background-color: transparent;
-  height: 0.8em;
-  border: 0.02em solid transparent;
-  border-right: 0.4em solid #F5F5F5;
-  border-left: 0.4em solid #F5F5F5;
-
-  position: relative;
-  margin: 0.61em 0.55em;
-}
-
-.stop{
-  width: 0;
-  background-color: transparent;
-  height: 0;
-  border: 0.40em solid #F5F5F5;
-  margin-left: 0.1em;
-  position: relative;
-  margin: 0.61em 0.63em;
-}
-
-.circle-around{
+//.sap-info-image-wrapper{
+//  flex:0 0 auto;
+//}
+.sap-info-image{
+  height:2em;
   width: 2em;
-  height: 2em;
-  padding: 0.4em;
-  padding-left: 0.65em;
+  flex: 0 0 auto;
+  vertical-align:middle;
+}
+.sap-name{
+  flex:1 1 auto;
+  display:flex;
+  flex-direction:column;
+  margin-left:0.5em;
+  font-family:Tahoma;
 
-  background-color: @color-orange;
-  border-radius: 1em;
-  float: left;
+}
+.sap-info-user-name{
+  font-size:0.85em;
+  flex:1 1 auto;
+  color:@color-blue-dark;
+  margin-bottom: 0.25em;
 
+
+}
+.sap-info-file-name{
+  font-size:0.75em;
+  flex:1 1 auto;
   position: relative;
-  opacity: 0.8;
-  transform: perspective( -7em ) rotateY( 248deg );
+  display: inline-block;
+  color:@color-blue;
+
+}
+
+.sap-icon{
+  font-size: 1em;
+  cursor: pointer;
+  /* padding: 1em; */
+  position: relative;
+  display: inline-block;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  text-align: center;
+  .asc-transition();
+  flex:0 0 auto;
+}
+.sap-icon.spn-icon-volume{
+  font-size: 1.2em;
+  width: 2.5em;
+  height: 2.5em;
+  line-height: 2.5em;
+}
+.sap-first-section{
+  // margin-top:1em;
 }
 
 .button-wrapper{
@@ -181,12 +280,97 @@ input#progressBar{
   cursor: pointer;
 }
 
-#visualizerCanvas{
+@media(min-width:@screen-md-min){
+  .sap-icon:hover{
+    //  background-color: #f3e6d3;
+    border-radius: 100%;
+    border: 0.1em solid #c8b98d;
+  }
+}
+
+/****************RANGE*********************/
+input[type=range] {
+  -webkit-appearance: none;
   width: 100%;
-  height: 100%;
-  position: relative;
-  top: 0px;
-  padding: 0px;
-  line-height: 0px;
-  z-index: 0;
+  margin: 4.95px 0;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 2.1px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #d0b179;
+  border-radius: 4.9px;
+  border: 0px solid #000000;
+}
+input[type=range]::-webkit-slider-thumb {
+  box-shadow: 0px 0px 0px #d0b179, 0px 0px 0px #d7bc8c;
+  border: 0.9px solid #d0b179;
+  height: 12px;
+  width: 12px;
+  border-radius: 50px;
+  background: #ab8e5a;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -4.95px;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #d0b179;
+}
+input[type=range]::-moz-range-track {
+  width: 100%;
+  height: 2.1px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+  background: #d0b179;
+  border-radius: 4.9px;
+  border: 0px solid #000000;
+}
+input[type=range]::-moz-range-thumb {
+  box-shadow: 0px 0px 0px #d0b179, 0px 0px 0px #d7bc8c;
+  border: 0.9px solid #d0b179;
+  height: 12px;
+  width: 12px;
+  border-radius: 50px;
+  background: #ab8e5a;
+  cursor: pointer;
+}
+input[type=range]::-ms-track {
+  width: 100%;
+  height: 2.1px;
+  cursor: pointer;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #d0b179;
+  border: 0px solid #000000;
+  border-radius: 9.8px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-fill-upper {
+  background: #d0b179;
+  border: 0px solid #000000;
+  border-radius: 9.8px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+input[type=range]::-ms-thumb {
+  box-shadow: 0px 0px 0px #d0b179, 0px 0px 0px #d7bc8c;
+  border: 0.9px solid #d0b179;
+  height: 12px;
+  width: 12px;
+  border-radius: 50px;
+  background: #ab8e5a;
+  cursor: pointer;
+  height: 2.1px;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #d0b179;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #d0b179;
 }

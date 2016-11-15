@@ -4,173 +4,209 @@
 'use strict';
 angular.module('kAngularHowlerApp').
 controller('AudioCtrl',
-  ['$document','$scope',
-    function ($document, $scope) {
+  ['$document','$scope','$timeout',
+    function ($document, $scope, $timeout) {
       var context;
       var self = this;
-      var startTime;
-      var isPlaying;
-      var pause;
-      var smoothing;
-      var fftSize;
-      var canvasWidth;
-      var canvasHeight;
+      var handleEnd,
+        index, isPlaying,  pause, smoothing,player,
+        fftSize, canvasWidth, canvasHeight, howl,
+        soundId, init, setVolumeIcon, watchPlayback, Player;
 
-      var init = function() {
-        initVariables();
-        initDrawing();
-        $document.bind('click', function() {
-          self.volumeHoverOut();
-          $scope.$apply();
-        });
-      }
-      var initVariables = function () {
+      setVolumeIcon = function(volume){
+        if(volume > 0.5) return self.data.volumeUp;
+        if(volume <= 0.5 && volume > 0) return self.data.volumeDown;
+        return self.data.volumeOff;
+      };
+      self.data = {
+        startIcon: "fa fa-play",
+        stopIcon: "stop",
+        pauseIcon: "fa fa-pause",
+        volumeUp:'fa fa-volume-up',
+        volumeDown:'fa fa-volume-down',
+        volumeOff:'fa fa-volume-off'
+      };
+      handleEnd = function handleEnd(){
         isPlaying = false;
         self.playIcon = self.data.startIcon;
-        self.data.timevalue = 0;
-        self.data.startOffset = 0;
-        if (self.startProgressTimer) {
-          clearInterval(self.startProgressTimer);
-        }
-      }
-
-      var initDrawing = function() {
-        smoothing = 0.8;
-        fftSize = 2048;
-        canvasWidth = 240;
-        canvasHeight = 70;
-      }
-
-      self.data = {
-        title: "Kosar Guitar Tuner",
-        levelvalue: 30,
-        levelMax: 100,
-        levelMin: 0,
-        startIcon: "fa-play",
-        stopIcon: "stop",
-        pauseIcon: "fa-pause",
-        remaaining: 0,
-        timevalue: 0,
-        timeMax: 100,
-        timeMin: 0,
-        startOffset: 0,
-        showVolumeLevel: false
-
-      }
-
-
-      //Initiation
-      init();
-
-      self.volumeChange = function () {
-        self.gainNode.gain.value = calculateLevel();
+        clearInterval(watchPlayback);
       };
 
-      self.play = function () {
-        if (!context) {
-          context = contextFactory.defineContext();
-        }
-        if (isPlaying) {
-          pause();
-        } else {
-          var audioGraph = contextFactory.createAudioGraph(context);
-          var source = audioGraph.source;
-          self.gainNode = audioGraph.gainNode;
-          self.gainNode.gain.value = calculateLevel();
-          self.analyzer = audioGraph.analyzer;
-          self.playIcon = self.data.pauseIcon;
-          if (!self.buffer) {
-            loadAudio(source, self.startAudio);
-          } else {
-            self.startAudio(source);
+      var Player = function(playlist){
+        this.playlist = playlist.slice(0);
+      };
+
+      Player.prototype = {
+        play: function (index) {
+          var _playlist = this.playlist;
+          if(index < 0 || !_playlist || !_playlist.length === 0 ||
+            index >= _playlist.length){
+            return;
           }
-
-          self.timeChange = function () {
-            source.stop();
-            clearInterval(self.startProgressTimer);
-            self.data.startOffset = self.data.timevalue * self.buffer.duration / 100;
-            isPlaying = false;
-            self.play();
-          }
-
-          self.stop = function () {
-            if (self.buffer) {
-              source.stop();
-              initVariables();
-            }
-          };
-
-          pause = function () {
-            source.stop();
-            clearInterval(self.startProgressTimer);
-            calculateStartOffset();
-            self.playIcon = self.data.startIcon;
-            isPlaying = false;
-
-          };
-        }
-      }
-
-      var calculateStartOffset = function() {
-        self.data.startOffset += context.currentTime - startTime;
-      }
-
-      self.watchTimeOffset = function () {
-        calculateStartOffset();
-        startTime = context.currentTime;
-        //  self.data.title = self.data.startOffset;
-        self.data.timevalue = self.data.startOffset * 100 / self.buffer.duration;
-        if (self.data.timevalue >= 100) {
-          initVariables();
-        }
-        $scope.$apply();
-      }
-      self.startAudio = function (source) {
-        source.buffer = self.buffer;
-        source.start(0, self.data.startOffset % source.buffer.duration);
-        isPlaying = true;
-        startTime = context.currentTime;
-        requestAnimFrame(self.draw.bind());
-        self.startProgressTimer = setInterval(self.watchTimeOffset, 500);
-      }
-
-      var loadAudio = function (source, callBack) {
-        var url = 'audio/Blackbird.mp3';
-        loadAssets.loadAudio(context, url, function (res) {
-          if (res.buffer) {
-            self.buffer = res.buffer;
-            callBack(source);
+          // var that = this;
+          var sound;
+          index = typeof index === 'number' ? index : 0;
+          var data = _playlist[index];
+          // If we already loaded this track, use the current one.
+          // Otherwise, setup and load a new Howl.
+          if (data.howl) {
+            sound = data.howl;
           }
           else {
-            alert("Error with finding audio data: " + res.err);
-            self.playIcon = self.data.startIcon;
-            isPlaying = false;
+            sound = data.howl = new Howl({
+              src: data.src,
+              volume: self.volume,
+              html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
+              onplay: function (e) {
+                self.duration =data.howl.duration();
+                isPlaying = true;
+                self.playIcon = self.data.pauseIcon;
+                self.showSoundInfo = true;
+                self.showSpinner = false;
+                setInterval(watchPlayback, 500);
+                $scope.$apply();
+              },
+              onload: function () {
+
+              },
+              onend: function () {
+                handleEnd();
+                $scope.$apply();
+              },
+              onpause: function () {
+                handleEnd();
+                $scope.$apply();
+              },
+              onstop: function () {
+                handleEnd();
+                $scope.$apply();
+              }
+            });
           }
-        });
-      }
+          self.accountImage = data.image;
+          self.username = data.username;
+          self.filename = data.filename;
+          // Begin playing the sound.
+          // Keep track of the index we are currently playing.
+          // self.index = index;
+          return sound.play();
+        },
+        pause: function(index, soundId){
+          var _playlist = this.playlist;
+          if(_playlist[index] && _playlist[index].howl){
+            _playlist[index].howl.pause(soundId);
+          }
+        },
+        stop: function(index, soundId){
+          var _playlist = this.playlist;
+          try{
+            if(_playlist && _playlist[index].howl){
+              this.playlist[index].howl.stop(soundId);
+            }
+          }
+          catch(e){}
+        },
+        volumeChange: function(index, volume){
+          var _playlist = this.playlist;
+          if(_playlist[index] && _playlist[index].howl){
+            _playlist[index].howl.volume(volume);
+            self.volumeIcon = setVolumeIcon(volume);
+          }
+        },
+        seek: function(index, soundId, startOffset){
+          /**get or set seek */
+          var _playlist = this.playlist;
+          if(_playlist[index] && _playlist[index].howl){
+            return startOffset?
+              _playlist[index].howl.seek(startOffset, soundId):
+              _playlist[index].howl.seek(soundId);
+          }
+        }
+      };
 
-      self.draw = function () {
-        var analyzer = self.analyzer;
-        analyzer.smoothingTimeConstant = smoothing;
-        analyzer.fftSize = fftSize;
-        var canvas = document.querySelector('#visualizerCanvas');
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-        var drawContext = canvas.getContext('2d');
-        var params = { "WIDTH": canvasWidth, "HEIGHT": canvasHeight };
-        drawingFactory.freqDomainChart(analyzer, drawContext, params);
-        requestAnimFrame(self.draw.bind());
-      }
+      init = function() {
+        isPlaying = false;
+        self.volume = $scope.volume || 0.4;
+        self.playbackPosition = 0;
+        self.duration = 0;
+        self.startOffset = 0;
+        self.showSoundInfo = false;
+        self.showSpinner = false;
+        self.showVolumeLevel = false;
+        self.thisIsVolumeRange = false;
+        self.volumeIcon = setVolumeIcon(self.volume);
+        self.volumeLevel = 30;
+        self.playIcon = self.data.startIcon;
+        self.playlist = $scope.playlist;
+        if($scope.index && $scope.index > 0 && $scope.index < self.playlist.length){
+          self.index = $scope.index;
+        }
+        else{
+          self.index = 0;
+        }
+        self.autoPlay = $scope.autoPlay || false;
+        player = new Player($scope.playlist);
+        if(self.autoPlay){
+          self.play();
+        }
+      };
 
-      var calculateLevel = function () {
-        var fraction = parseInt(self.data.levelvalue) / parseInt(self.data.levelMax);
-        return fraction * fraction;
-      }
-      self.volumeHoverOut = function () {
-        self.data.showVolumeLevel = false;
-      }
-      self.volumeHoverIn = function () {
-        self.data.showVolumeLevel = true;
-      }
+      watchPlayback = function(){
+        self.startOffset = player.seek(self.index, self.soundId) || 0;
+        self.playbackPosition = self.startOffset * 100 / self.duration;
+        $scope.$apply();
+      };
 
+      self.volumeChange = function () {
+        player.volumeChange(self.index, self.volumeLevel/100);
+      };
+
+      self.timeChange = function () {
+        try{
+          $timeout(function(){
+            self.startOffset = self.playbackPosition * self.duration / 100;
+            player.seek(self.index, self.soundId, self.startOffset);
+          }, 100);
+
+        }
+        catch(e){}
+      };
+
+      self.play = function(){
+        if(isPlaying){ /**Pause */
+        player.pause(self.index, self.soundId);
+        }
+        else{/**play */
+        self.showSpinner = true;
+          self.soundId = player.play(self.index);
+        }
+      };
+
+      self.move = function(direction){
+        var _index = (direction === 'backward')?
+          (self.index - 1 || 0):
+        self.index + 1;
+        if(_index >= 0 && _index < player.playlist.length){
+          self.showSoundInfo = false;
+          player.stop(self.index);
+          // $timeout(function(){
+          isPlaying = false;
+          self.index = _index;
+          self.play();
+          // });
+        }
+      };
+
+      self.hideVolume = function () {
+        self.showVolumeLevel = false;
+        self.thisIsVolumeRange = false;
+      };
+      self.showVolume = function () {
+        if(!self.thisIsVolumeRange){
+          self.showVolumeLevel = !self.showVolumeLevel;
+        }
+        self.thisIsVolumeRange = false;
+      };
+      /**Initialization */
+      init();
     }]);

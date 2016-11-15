@@ -1,5 +1,5 @@
 /**
- * Created by K2 on 11/2/2016.
+ * Created by Kosar Hosseinkhani on 11/2/2016.
  */
 'use strict';
 angular.module('kAngularHowlerApp').
@@ -11,10 +11,11 @@ directive('sonicAudio', [
       restrict: 'E',
       replace:true,
       scope:{
-        source:'='
+        playlist:'=' /**Array*/,
+        autoPlay:'=',
+        index:'='
       },
-      link: function(){
-
+      link: function(scope, elm, attr){
       } /** link */
     }; /** return */
   }]); /** directive */
