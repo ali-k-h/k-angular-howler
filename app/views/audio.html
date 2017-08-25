@@ -1,12 +1,24 @@
-<div class="sonic-audio-player-wrapper">
+<div class="sonic-audio-player-wrapper"
+     ng-show="playlist">
 
   <div class="sonic-audio-player-base"></div>
   <!--<div class="sonic-audio-player-cover">-->
   <div class="sonic-audio-player">
     <div class="sap-section">
-      <i class="sap-icon fa fa-step-backward" ng-click="audioCtrl.move('backward')"></i>
-      <i class="sap-icon {{audioCtrl.playIcon}}" ng-click="audioCtrl.play()"></i>
-      <i class="sap-icon fa fa-step-forward" ng-click="audioCtrl.move()"></i>
+      <i class="sap-icon fa fa-step-backward" ng-if="playlist.length > 1"
+         ng-click="audioCtrl.move('backward')"></i>
+      <span class="sap-icon" ng-click="audioCtrl.play()">
+        <i ng-if = "audioCtrl.showSpinner"
+           class="fa fa-circle-o-notch fa-spin sap-spinner-icon"></i>
+        <span class="sap-icon-play">
+                <i class="{{audioCtrl.playIcon}}"
+                   ng-if="!audioCtrl.showSpinner"></i>
+        </span>
+      </span>
+
+
+      <i class="sap-icon fa fa-step-forward" ng-if="playlist.length > 1"
+         ng-click="audioCtrl.move()"></i>
       <!--<i class="sap-icon fa fa-stop" ng-click="audioCtrl.stop()"></i>-->
       <span class="sap-icon spn-icon-volume {{audioCtrl.volumeIcon}}"
             ng-click="audioCtrl.showVolume(this)"
@@ -18,19 +30,29 @@
                  ng-if="audioCtrl.showVolumeLevel"
                  ng-click="audioCtrl.thisIsVolumeRange = true;"
                  ng-change="audioCtrl.volumeChange()"
-
                  ng-model="audioCtrl.volumeLevel" />
       </span>
       <!--</span>-->
-      <span class="sap-spinner-icon-cover" ng-show="audioCtrl.showSpinner">
-        <span class="fa fa-cog fa-spin sap-spinner-icon"></span>
-      </span>
-    <span class="sap-info" ng-show="audioCtrl.showSoundInfo">
-      <img class="sap-info-image" src="{{audioCtrl.accountImage}}" />
+      <!--<a ng-href={{audioCtrl.userProfileLink}}>-->
+      <span ui-sref="profile.wall({id:'{{audioCtrl.userId}}'})"
+            class="sap-icon user-img-background sap-image">
+           <img  class="sap-info-image" src="{{audioCtrl.image}}" />
+        </span>
+      <!--</a>-->
+      <span class="sap-info">
+
       <span class="sap-name">
-        <span class="sap-info-user-name" ng-bind="audioCtrl.username"></span>
+
+        <span class="sap-info-user-name">
+          <a ng-href={{audioCtrl.userProfileLink}}>
+            {{audioCtrl.username}}
+          </a>
+        </span>
+
         <span class="sap-info-file-name">
-          {{audioCtrl.filename}}
+
+           {{audioCtrl.filename}}
+
           <span class="progressbar">
             <span ng-show="audioCtrl.startOffset"
                   class="sonic-audio-player-meter sonic-audio-player-meter-left">
@@ -44,6 +66,10 @@
         </span>
       </span>
     </span>
+      <span class="sap-error" ng-show="audioCtrl.showError">
+        The file format is not supported.
+      </span>
+      <i class="sap-icon-close fa fa-times" ng-click="audioCtrl.close()"></i>
     </div><!--audio-player-first-section-->
   </div>
   <!--</div><!-sonic-audio-player-cover&ndash;&gt;-->
