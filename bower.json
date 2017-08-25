@@ -1,14 +1,26 @@
 {
   "name": "k-angular-howler",
-  "version": "0.0.0",
+  "version": "0.2.0",
+  "authors": [
+    "Ali Hosseinkhani <kosarh79@gmail.com>"
+  ],
+  "description": "Audio player UI on top of Howler.js and Angular.js",
+  "main": [
+    "dist/js/kangularhowler.min.js",
+    "dist/styles/kangularhowler.min.css"
+  ],
   "dependencies": {
-    "angular": "^1.4.0",
-    "howler.js": "howler#^2.0.1",
-    "font-awesome": "^4.7.0"
+    "angular": "^1.6.6",
+    "font-awesome": "^4.7.0",
+    "howler.js": "^2.0.4"
   },
   "devDependencies": {
     "angular-mocks": "^1.4.0"
   },
-  "appPath": "app",
-  "moduleName": "kAngularHowlerApp"
+  "appPath": ".",
+  "moduleName": "kAngularHowlerApp",
+  "license": "MIT",
+  "resolutions": {
+    "angular": "^1.6.6"
+  }
 }

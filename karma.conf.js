@@ -14,21 +14,39 @@ module.exports = function(config) {
     // testing framework to use (jasmine/mocha/qunit/...)
     // as well as any additional frameworks (requirejs/chai/sinon/...)
     frameworks: ['jasmine'],
+    preprocessors: {
+      '**/*.html': ['ng-html2js']
+    },
 
     // list of files / patterns to load in the browser
     files: [
       // bower:js
-      'app/bower_components/angular/angular.js',
-      'app/bower_components/howler.js/dist/howler.js',
-      'app/bower_components/angular-mocks/angular-mocks.js',
+      'bower_components/angular/angular.js',
+
+     // 'bower_components/howler.js/dist/howler.js',
+      'bower_components/angular-mocks/angular-mocks.js',
       // endbower
       'app/scripts/**/*.js',
+      'app/**/*.html',
      // 'test/mock/**/*.js',
       'test/**/*.js'
     ],
 
+
+    ngHtml2JsPreprocessor: {
+      //cacheIdFromPath: function (filepath) {
+      //   console.log('.........' + filepath);
+      //   //The suggested filepath.strip would through an error
+      //   var cacheId = filepath.replace('app/', '');
+      //   return cacheId;
+      // },
+      moduleName: 'templates'
+    },
+
+
     // list of files / patterns to exclude
     exclude: [
+      'app/scripts/player.service.js',
     ],
 
     // web server port
@@ -47,7 +65,7 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false,
+   // singleRun: false,
 
     colors: true,
 

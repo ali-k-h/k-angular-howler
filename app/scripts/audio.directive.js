@@ -6,7 +6,7 @@ angular.module('kAngularHowlerApp').
 directive('sonicAudio', [
   function () {
     return {
-      templateUrl: 'views/audio.html',
+      templateUrl: 'app/views/audio.html',
       controller:'AudioCtrl as audioCtrl',
       restrict: 'E',
       replace:true,
