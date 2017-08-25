@@ -45,7 +45,7 @@ module.exports = function (grunt) {
         }
       },
       jsTest: {
-        files: ['test/spec/{,*/}*.js'],
+        files: ['app/scripts/*.{spec,mock}.js'],
         tasks: ['newer:jshint:test', 'newer:jscs:test', 'karma']
       },
       less: {
@@ -436,7 +436,7 @@ module.exports = function (grunt) {
     // Test settings
     karma: {
       unit: {
-        configFile: 'test/karma.conf.js',
+        configFile: 'karma.conf.js',
         singleRun: true
       }
     }

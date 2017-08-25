@@ -11,11 +11,15 @@ directive('sonicAudio', [
       restrict: 'E',
       replace:true,
       scope:{
-        playlist:'=' /**Array*/,
-        autoPlay:'=',
-        index:'='
+        playlist:'=?' /**Array*/,
+        autoPlay:'=?', /**Boolean */
+        hideAtStateChange:'=?', /**Boolean if true when
+         state changes goes away e.g. from home to profile */
+        index:'=?', /** Number */
+        triggerElm:'@'
       },
       link: function(scope, elm, attr){
       } /** link */
     }; /** return */
   }]); /** directive */
+
