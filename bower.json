@@ -10,7 +10,7 @@
     "dist/styles/kangularhowler.min.css"
   ],
   "dependencies": {
-    "angular": "^1.6.6",
+    "angular": "~1.5.7",
     "font-awesome": "^4.7.0",
     "howler.js": "^2.0.4"
   },
