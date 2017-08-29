@@ -1,20 +1,30 @@
 # k-angular-howler
+##Description
+K-angular-howeler is an audio player user interface on top of Angular 1.X and Howler.js
 
-## Build & development
-Run `npm install`, `grunt build` for building
+##Install dependencies
+`npm install`
 
-## Demo
+`bower install`
+
+## Build
+ `grunt build`
+ 
+ ##Test
+ `grunt test`
+
+## Live Demo
 https://www.sonicspan.com/post/5982a765fa06ca0011eec0f2
 
-## Example: 
-see example folder on how to use it and add dependencies
+## Browser Compatibility
+Tested in the following browsers/versions:
+* Google Chrome 50.0+
+* Internet Explorer 11.0+
+* Firefox 40.0+
+* Safari 8+
+* Mobile Safari 8+
+* Android Chrome 50.0+
+* Microsoft Edge
 
-##TODO:
-- Bower install
-- Replace font-awesome with a light library
-- Cleanup gruntfile.js, package.json, mode_module folder
-- complete tests
-- Help me mprove it please!
-
----This project is generated with [yo angular generator](https://github.com/yeoman/generator-angular)
-version 0.15.1.
+## Usage: 
+see index.html in the root folder and example.js in the example folder

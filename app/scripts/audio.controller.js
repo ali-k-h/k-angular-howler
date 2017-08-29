@@ -3,13 +3,11 @@
  */
 
 angular.module('kAngularHowlerApp').controller('AudioCtrl',
-  ['$document', '$scope', '$timeout', '$interval','player',
-    function ($document, $scope, $timeout, $interval, player) {
+  ['$document', '$scope', '$interval','player',
+    function ($document, $scope, $interval, player) {
       'use strict';
       var self = this;
       var handleEnd;
-      var isPlaying;
-      var pause;
       var init;
       var setVolumeIcon;
       var watchPlayback;
@@ -40,7 +38,7 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
         handleEnd();
         $scope.$apply();
       };
-      onerrorCallback = function (err) {
+      onerrorCallback = function () {
         self.showError = true;
         self.showSpinner = false;
         $scope.$apply();
@@ -51,7 +49,7 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
       };
       onplayCallback = function (data) {
         self.duration = data.howl.duration();
-        isPlaying = true;
+        self.isPlaying = true;
         self.playIcon = self.data.pauseIcon;
         self.showSoundInfo = true;
         self.showSpinner = false;
@@ -86,7 +84,7 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
       };
 
       handleEnd = function () {
-        isPlaying = false;
+        self.isPlaying = false;
         self.playIcon = self.data.startIcon;
         $interval.cancel(startWatching);
       };
@@ -95,7 +93,7 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
         if ($scope.playlist && $scope.playlist.length > 0) {
           cleanupSounds();
           self.triggerElm = $scope.triggerElm;
-          isPlaying = false;
+          self.isPlaying = false;
           self.volume = $scope.volume || 0.4;
           self.playbackPosition = 0;
           self.duration = 0;
@@ -147,7 +145,7 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
       };
 
       self.play = function () {
-        if (isPlaying) {
+        if (self.isPlaying) {
           /**Pause */
           player.pause(self.index, self.soundId, self.playlist);
         }
@@ -187,7 +185,7 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
         }
         self.showSoundInfo = false;
         player.stop(self.index, self.soundId, self.playlist);
-        isPlaying = false;
+        self.isPlaying = false;
         self.index = _index;
         self.play();
       };
@@ -209,6 +207,5 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
         $scope.playlist = null;
       };
 
-      /**Initialization */
       init();
     }]);

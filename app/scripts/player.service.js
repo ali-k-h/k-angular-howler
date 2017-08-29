@@ -28,13 +28,13 @@ angular.module('kAngularHowlerApp')
           else {
             currentHowlObj = data.howl = sound = new Howl({
               src: data.src,
-             // volume: self.volume,
+
               html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
               onplay: function(){
-                safeCb(options.onplayCallback)(data)
+                safeCb(options.onplayCallback)(data);
               },
               onload: function(){
-                safeCb(options.onloadCallback)(currentHowlObj)
+                safeCb(options.onloadCallback)(currentHowlObj);
               },
               onloaderror: safeCb(options.onerrorCallback),
               onend: safeCb(options.onendCallback),
@@ -66,7 +66,7 @@ angular.module('kAngularHowlerApp')
         volumeChange: function (index, volume, _playlist, callback) {
           if (_playlist[index] && _playlist[index].howl) {
             _playlist[index].howl.volume(volume);
-            safeCb(callback)()
+            safeCb(callback)();
           }
         },
         seek: function (index, soundId, _playlist, startOffset) {
@@ -74,7 +74,7 @@ angular.module('kAngularHowlerApp')
           if (_playlist[index] && _playlist[index].howl) {
             return startOffset ?
               _playlist[index].howl.seek(startOffset, soundId) :
-              _playlist[index].howl.seek(soundId);
+              _playlist[index].howl.seek(null, soundId);
           }
         },
         unload: function(){

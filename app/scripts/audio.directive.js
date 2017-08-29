@@ -18,8 +18,6 @@ directive('sonicAudio', [
         index:'=?', /** Number */
         triggerElm:'@'
       },
-      link: function(scope, elm, attr){
-      } /** link */
     }; /** return */
   }]); /** directive */
 

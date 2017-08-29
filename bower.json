@@ -1,6 +1,5 @@
 {
   "name": "k-angular-howler",
-  "version": "0.2.0",
   "authors": [
     "Ali Hosseinkhani <kosarh79@gmail.com>"
   ],
@@ -17,10 +16,28 @@
   "devDependencies": {
     "angular-mocks": "^1.4.0"
   },
+  "moduleType": [
+    "angular"
+  ],
+  "keywords": [
+    "audio player",
+    "howler",
+    "angular",
+    "UI"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kosarh79/k-angular-howler.git"
+  }
   "appPath": ".",
   "moduleName": "kAngularHowlerApp",
   "license": "MIT",
-  "resolutions": {
-    "angular": "^1.6.6"
-  }
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "private": false
 }
