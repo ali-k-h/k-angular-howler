@@ -1,14 +1,15 @@
 # k-angular-howler
-##Description
-K-angular-howeler is an audio player user interface on top of Angular 1.X and Howler.js
 
-## Usage: 
+## Description
+K-angular-howler is an audio player user interface on top of Angular 1.X and Howler.js
+
+## Usage
 `bower install --save k-angular-howler`
 
 see index.html in the root folder and example.js in the example folder
 
 
-##Install dependencies
+## Install dependencies
 `npm install`
 
 `bower install`
@@ -16,7 +17,7 @@ see index.html in the root folder and example.js in the example folder
 ## Build
  `grunt build`
  
- ##Test
+ ## Test
  `grunt test`
 
 ## Live Demo
