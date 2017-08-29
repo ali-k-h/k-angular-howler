@@ -9,6 +9,8 @@ bower install --save k-angular-howler
 ```
 See index.html in the root folder and example.js in the example folder
 
+### To Run, build and test
+Fork, Clone or download the ZIP
 
 ## Install dependencies
 ```range
