@@ -6,81 +6,29 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
   ['$document', '$scope', '$interval','player',
     function ($document, $scope, $interval, player) {
       'use strict';
+
       var self = this;
-      var handleEnd;
-      var init;
-      var setVolumeIcon;
-      var watchPlayback;
-      var startWatching;
+
       var cleanupSounds;
       var currentHowlObj;
-      var onplayCallback;
-      var onloadCallback;
-      var onerrorCallback;
+      var handleEnd;
+      var init;
       var onendCallback;
+      var onerrorCallback;
+      var onloadCallback;
       var onpauseCallback;
-      var onstopCallback;
+      var onplayCallback;
       var onseekCallback;
-
-      onseekCallback = function () {
-        $interval.cancel(startWatching);
-        startWatching = $interval(watchPlayback, 500);
-      };
-      onstopCallback = function () {
-        //handleEnd();
-        $scope.$apply();
-      };
-      onpauseCallback = function () {
-        handleEnd();
-        $scope.$apply();
-      };
-      onendCallback = function () {
-        handleEnd();
-        $scope.$apply();
-      };
-      onerrorCallback = function () {
-        self.showError = true;
-        self.showSpinner = false;
-        $scope.$apply();
-      };
-      onloadCallback = function (obj) {
-        currentHowlObj = obj;
-        currentHowlObj.loaded = true;
-      };
-      onplayCallback = function (data) {
-        self.duration = data.howl.duration();
-        self.isPlaying = true;
-        self.playIcon = self.data.pauseIcon;
-        self.showSoundInfo = true;
-        self.showSpinner = false;
-        self.showError = false;
-        startWatching = $interval(watchPlayback, 500);
-      };
-
-      self.data = {
-        startIcon: "fa fa-play",
-        stopIcon: "stop",
-        pauseIcon: "fa fa-pause",
-        volumeUp: 'fa fa-volume-up',
-        volumeDown: 'fa fa-volume-down',
-        volumeOff: 'fa fa-volume-off'
-      };
+      var onstopCallback;
+      var setVolumeIcon;
+      var startWatching;
+      var watchPlayback;
 
       cleanupSounds = function () {
         $interval.cancel(startWatching);
         if (currentHowlObj) {
           player.unload();
         }
-      };
-
-      setVolumeIcon = function (volume) {
-        if (volume > 0.5) {
-          return self.data.volumeUp;
-        }
-        if (volume <= 0.5 && volume > 0) {
-          return self.data.volumeDown;
-        }
-        return self.data.volumeOff;
       };
 
       handleEnd = function () {
@@ -122,26 +70,94 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
         }
       };
 
+      onendCallback = function () {
+        handleEnd();
+        $scope.$apply();
+      };
+
+      onerrorCallback = function () {
+        self.showError = true;
+        self.showSpinner = false;
+        $scope.$apply();
+      };
+
+      onpauseCallback = function () {
+        handleEnd();
+        $scope.$apply();
+      };
+
+      onplayCallback = function (data) {
+        self.duration = data.howl.duration();
+        self.isPlaying = true;
+        self.playIcon = self.data.pauseIcon;
+        self.showSoundInfo = true;
+        self.showSpinner = false;
+        self.showError = false;
+        startWatching = $interval(watchPlayback, 500);
+      };
+
+      onseekCallback = function () {
+        $interval.cancel(startWatching);
+        startWatching = $interval(watchPlayback, 500);
+      };
+
+      onstopCallback = function () {
+        $scope.$apply();
+      };
+
+      setVolumeIcon = function (volume) {
+        if (volume > 0.5) {
+          return self.data.volumeUp;
+        }
+        if (volume <= 0.5 && volume > 0) {
+          return self.data.volumeDown;
+        }
+        return self.data.volumeOff;
+      };
+
+      onloadCallback = function (obj) {
+        currentHowlObj = obj;
+        currentHowlObj.loaded = true;
+      };
+
       watchPlayback = function () {
         self.startOffset = player.seek(self.index, self.soundId, self.playlist) || 0;
         self.playbackPosition = self.startOffset * 100 / self.duration;
       };
 
-      self.volumeChange = function () {
-        var volume = self.volumeLevel / 100;
-        player.volumeChange(self.index, volume, self.playlist, function(){
-          self.volumeIcon = setVolumeIcon(volume);
-        });
+      self.close = function () {
+        cleanupSounds();
+        $scope.playlist = null;
       };
 
-      self.timeChange = function () {
-        try {
-          $interval.cancel(startWatching);
-          self.startOffset = self.playbackPosition * self.duration / 100;
-          player.seek(self.index, self.soundId, self.playlist, self.startOffset);
+      self.data = {
+        startIcon: "fa fa-play",
+        stopIcon: "stop",
+        pauseIcon: "fa fa-pause",
+        volumeUp: 'fa fa-volume-up',
+        volumeDown: 'fa fa-volume-down',
+        volumeOff: 'fa fa-volume-off'
+      };
+
+      self.hideVolume = function () {
+        self.showVolumeLevel = false;
+        self.thisIsVolumeRange = false;
+      };
+
+      self.move = function (direction) {
+        var _index = (direction === 'backward') ?
+        self.index - 1 : self.index + 1;
+        if (_index > self.playlist.length - 1) {
+          _index = 0;
         }
-        catch (e) {
+        if (_index < 0) {
+          _index = self.playlist.length - 1;
         }
+        self.showSoundInfo = false;
+        player.stop(self.index, self.soundId, self.playlist);
+        self.isPlaying = false;
+        self.index = _index;
+        self.play();
       };
 
       self.play = function () {
@@ -173,28 +189,6 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
         }
       };
 
-      self.move = function (direction) {
-        var _index = (direction === 'backward') ?
-        self.index - 1 : self.index + 1;
-        /** loop through sounds */
-        if (_index > self.playlist.length - 1) {
-          _index = 0;
-        }
-        if (_index < 0) {
-          _index = self.playlist.length - 1;
-        }
-        self.showSoundInfo = false;
-        player.stop(self.index, self.soundId, self.playlist);
-        self.isPlaying = false;
-        self.index = _index;
-        self.play();
-      };
-
-      self.hideVolume = function () {
-        self.showVolumeLevel = false;
-        self.thisIsVolumeRange = false;
-      };
-
       self.showVolume = function () {
         if (!self.thisIsVolumeRange) {
           self.showVolumeLevel = !self.showVolumeLevel;
@@ -202,9 +196,21 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
         self.thisIsVolumeRange = false;
       };
 
-      self.close = function () {
-        cleanupSounds();
-        $scope.playlist = null;
+      self.timeChange = function () {
+        try {
+          $interval.cancel(startWatching);
+          self.startOffset = self.playbackPosition * self.duration / 100;
+          player.seek(self.index, self.soundId, self.playlist, self.startOffset);
+        }
+        catch (e) {
+        }
+      };
+
+      self.volumeChange = function () {
+        var volume = self.volumeLevel / 100;
+        player.volumeChange(self.index, volume, self.playlist, function(){
+          self.volumeIcon = setVolumeIcon(volume);
+        });
       };
 
       init();
