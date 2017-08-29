@@ -27,8 +27,8 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kosarh79/k-angular-howler.git"
-  }
+    "url": "git://github.com/Kosarh79/k-angular-howler"
+  },
   "appPath": ".",
   "moduleName": "kAngularHowlerApp",
   "license": "MIT",
