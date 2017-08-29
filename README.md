@@ -4,22 +4,32 @@
 K-angular-howler is an audio player user interface on top of Angular 1.X and Howler.js
 
 ## Usage
-`bower install --save k-angular-howler`
-
-see index.html in the root folder and example.js in the example folder
+```range
+bower install --save k-angular-howler
+```
+See index.html in the root folder and example.js in the example folder
 
 
 ## Install dependencies
-`npm install`
+```range
+npm install
 
-`bower install`
+bower install
+```
+ ## Run
+ ```range
+ grunt serve
+```
+View it at http://localhost:8080/
 
 ## Build
- `grunt build`
- 
+```range
+ grunt build
+ ```
  ## Test
- `grunt test`
-
+ ```range
+ grunt test
+```
 ## Live Demo
 https://www.sonicspan.com/post/5982a765fa06ca0011eec0f2
 

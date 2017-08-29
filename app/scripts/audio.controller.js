@@ -9,6 +9,7 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
 
       var self = this;
 
+      var changedNotByUser;
       var cleanupSounds;
       var currentHowlObj;
       var handleEnd;
@@ -123,6 +124,10 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
       watchPlayback = function () {
         self.startOffset = player.seek(self.index, self.soundId, self.playlist) || 0;
         self.playbackPosition = self.startOffset * 100 / self.duration;
+        // with change to self.playbackPosition event change of input range gets fired
+        // and we don't want to invoke self.timeChange function here
+        //it only gets invoked when user changes the range
+        changedNotByUser = true;
       };
 
       self.close = function () {
@@ -198,6 +203,10 @@ angular.module('kAngularHowlerApp').controller('AudioCtrl',
 
       self.timeChange = function () {
         try {
+          if(changedNotByUser){
+            changedNotByUser = false;
+            return;
+          }
           $interval.cancel(startWatching);
           self.startOffset = self.playbackPosition * self.duration / 100;
           player.seek(self.index, self.soundId, self.playlist, self.startOffset);

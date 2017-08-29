@@ -168,6 +168,7 @@ describe('Controller: AudioCtrl', function () {
     audioCtrl.timeChange();
     interval.flush(500);
     expect(audioCtrl.startOffset).toBe(660);
+    audioCtrl.timeChange(); //did this to manually falsify changedNotByUser parameter as the event handler timeChange doesn't fire merely by changing the playbackPosition becuase it is a mock
     audioCtrl.playbackPosition = 12;
     audioCtrl.timeChange();
     interval.flush(500);
